@@ -1,0 +1,1359 @@
+<title>CondoGestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#5B4FE0;
+  --accent-2:#8B7FF0;
+  --accent-ink:#FFFFFF;
+  --bg:#F5F4FB;
+  --surface:#FFFFFF;
+  --surface-2:#F0EEFA;
+  --surface-3:#E9E6F7;
+  --border:#E1DEF0;
+  --text:#1E1B2E;
+  --text-dim:#635F7A;
+  --text-faint:#8B87A3;
+  --success:#1B8F5F;
+  --success-bg:#E1F5EB;
+  --warning:#B4750B;
+  --warning-bg:#FBF0D9;
+  --danger:#D13856;
+  --danger-bg:#FBE3E8;
+  --info:#2D6FD1;
+  --info-bg:#E4EDFB;
+  --shadow:0 1px 2px rgba(30,27,46,.06), 0 8px 24px -12px rgba(30,27,46,.12);
+  --shadow-lg:0 4px 12px rgba(30,27,46,.08), 0 24px 48px -16px rgba(30,27,46,.22);
+  --radius:14px;
+  --radius-sm:9px;
+  font-family:'Inter',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --accent:#8377F5; --accent-2:#A79CFF; --accent-ink:#14121F;
+    --bg:#131120; --surface:#1B1830; --surface-2:#221E3B; --surface-3:#2A2547;
+    --border:#332E52; --text:#EFEDF9; --text-dim:#A9A4C6; --text-faint:#7A7599;
+    --success:#3FCB8E; --success-bg:#123526; --warning:#E3A73C; --warning-bg:#3A2C0F;
+    --danger:#F2708A; --danger-bg:#3B1520; --info:#6FA3F2; --info-bg:#122A47;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    --shadow-lg:0 4px 16px rgba(0,0,0,.4), 0 24px 48px -16px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --accent:#8377F5; --accent-2:#A79CFF; --accent-ink:#14121F;
+  --bg:#131120; --surface:#1B1830; --surface-2:#221E3B; --surface-3:#2A2547;
+  --border:#332E52; --text:#EFEDF9; --text-dim:#A9A4C6; --text-faint:#7A7599;
+  --success:#3FCB8E; --success-bg:#123526; --warning:#E3A73C; --warning-bg:#3A2C0F;
+  --danger:#F2708A; --danger-bg:#3B1520; --info:#6FA3F2; --info-bg:#122A47;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  --shadow-lg:0 4px 16px rgba(0,0,0,.4), 0 24px 48px -16px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Sora',system-ui,sans-serif;margin:0;text-wrap:balance;color:var(--text)}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:14px}
+::selection{background:var(--accent);color:var(--accent-ink)}
+a{color:inherit}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- App shell ---------- */
+#root{min-height:100%}
+.app-shell{display:flex;min-height:100vh}
+.sidebar{
+  width:230px;flex:none;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:18px 14px;gap:4px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;margin-bottom:6px;border-bottom:1px solid var(--border)}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:var(--accent-ink);font-family:'Sora';font-weight:800;font-size:15px;flex:none}
+.brand-name{font-family:'Sora';font-weight:700;font-size:15px;line-height:1.1}
+.brand-sub{font-size:11px;color:var(--text-faint)}
+.nav-link{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);
+  color:var(--text-dim);font-size:13.5px;font-weight:600;text-decoration:none;border:none;background:transparent;width:100%;text-align:left;
+}
+.nav-link:hover{background:var(--surface-2);color:var(--text)}
+.nav-link.active{background:var(--accent);color:var(--accent-ink)}
+.nav-link .ic{width:18px;text-align:center;flex:none;font-size:14px}
+.nav-group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);padding:14px 10px 4px;font-weight:700}
+.sidebar-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--border)}
+.role-pill{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;background:var(--surface-2);color:var(--text-dim);padding:6px 8px;border-radius:8px;font-weight:700;margin-bottom:8px}
+.logout-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-dim);font-size:12.5px;font-weight:600;width:100%}
+.logout-btn:hover{color:var(--danger);border-color:var(--danger)}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));
+}
+.topbar-title{font-family:'Sora';font-weight:700;font-size:19px}
+.topbar-sub{font-size:12.5px;color:var(--text-faint);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-dim)}
+.icon-btn:hover{background:var(--surface-2)}
+.menu-btn{display:none}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--surface-3);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Sora';font-weight:700;font-size:13px;flex:none}
+
+.content{padding:22px 24px 60px;max-width:1280px;width:100%;margin:0 auto}
+.view-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.view-head h2{font-size:21px}
+.view-head .desc{font-size:13px;color:var(--text-faint);margin-top:3px}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13.5px;font-weight:600;transition:background .12s}
+.btn:hover{background:var(--surface-2)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.06)}
+.btn-danger{color:var(--danger);border-color:var(--danger)}
+.btn-danger:hover{background:var(--danger-bg)}
+.btn-sm{padding:6px 10px;font-size:12.5px;border-radius:8px}
+.btn-ghost{border-color:transparent;background:transparent}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- Cards / KPI ---------- */
+.grid{display:grid;gap:14px}
+.kpi-grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.kpi{display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start}
+.kpi-label{font-size:12px;color:var(--text-faint);font-weight:600}
+.kpi-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.kpi-value{font-family:'Sora';font-size:24px;font-weight:700}
+.kpi-trend{font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:4px}
+.section-title{font-family:'Sora';font-weight:700;font-size:15px;margin-bottom:12px}
+.two-col{grid-template-columns:1.3fr 1fr}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+/* ---------- Badges ---------- */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:700}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge-success{background:var(--success-bg);color:var(--success)}
+.badge-warning{background:var(--warning-bg);color:var(--warning)}
+.badge-danger{background:var(--danger-bg);color:var(--danger)}
+.badge-info{background:var(--info-bg);color:var(--info)}
+.badge-neutral{background:var(--surface-3);color:var(--text-dim)}
+.tag-soon{background:var(--surface-3);color:var(--text-faint);font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.02em}
+
+/* ---------- Table ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-faint);font-weight:700;padding:11px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-2)}
+.cell-actions{display:flex;gap:6px;justify-content:flex-end}
+.muted{color:var(--text-faint)}
+.empty-row{text-align:center;color:var(--text-faint);padding:30px 14px}
+
+/* ---------- Forms ---------- */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.field label{font-size:12.5px;font-weight:600;color:var(--text-dim)}
+.field input,.field select,.field textarea{
+  padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--text);width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.field-row{grid-template-columns:1fr}}
+.hint{font-size:11.5px;color:var(--text-faint)}
+
+/* ---------- Modal ---------- */
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,18,31,.5);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:100;overflow-y:auto}
+.modal{background:var(--surface);border-radius:16px;width:100%;max-width:480px;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border)}
+.modal-head h3{font-size:16px}
+.modal-body{padding:18px}
+.modal-foot{padding:14px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+
+/* ---------- Toast ---------- */
+.toast-stack{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:8px;z-index:200;max-width:320px}
+.toast{background:var(--text);color:var(--bg);padding:11px 14px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;animation:toastIn .18s ease-out}
+@keyframes toastIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---------- Login ---------- */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:
+  radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 55%),
+  radial-gradient(circle at 85% 90%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 55%),
+  var(--bg);
+}
+.login-card{width:100%;max-width:760px}
+.login-head{text-align:center;margin-bottom:28px}
+.login-mark{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:var(--accent-ink);font-family:'Sora';font-weight:800;font-size:22px;margin:0 auto 14px}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.role-grid{grid-template-columns:1fr}}
+.role-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:left;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.role-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.role-card{transition:transform .12s, border-color .12s}
+.role-ic{width:40px;height:40px;border-radius:11px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:18px}
+.role-card h3{font-size:15px}
+.role-card p{font-size:12.5px;color:var(--text-faint);line-height:1.5}
+.role-enter{font-size:12.5px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:5px;margin-top:auto}
+.login-foot{text-align:center;margin-top:22px;font-size:11.5px;color:var(--text-faint)}
+
+/* ---------- misc ---------- */
+.progress{height:7px;border-radius:99px;background:var(--surface-3);overflow:hidden}
+.progress > div{height:100%;border-radius:99px;background:var(--accent)}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px;padding-top:8px}
+.bar-chart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar-chart .stack{width:100%;max-width:26px;display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden}
+.bar-chart .lbl{font-size:10px;color:var(--text-faint);font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--text-dim);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.donut{width:120px;height:120px;border-radius:50%;flex:none}
+.avail-list{display:flex;flex-direction:column;gap:10px}
+.avail-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px}
+.notice-banner{background:var(--info-bg);color:var(--info);border-radius:10px;padding:10px 13px;font-size:12.5px;font-weight:600;margin-bottom:16px;display:flex;gap:8px;align-items:flex-start}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.list-comm{display:flex;flex-direction:column;gap:12px}
+.comm-item{border:1px solid var(--border);border-radius:12px;padding:13px 14px}
+.comm-item h4{font-size:14px;margin-bottom:4px}
+.comm-item .meta{font-size:11.5px;color:var(--text-faint);margin-bottom:7px;display:flex;gap:8px;align-items:center}
+.comm-item p{font-size:13px;color:var(--text-dim);line-height:1.5}
+.stat-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.stat-row:last-child{border-bottom:none}
+.mobile-tabbar{display:none}
+
+@media(max-width:860px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:60;transform:translateX(-100%);transition:transform .18s;box-shadow:var(--shadow-lg)}
+  .sidebar.open{transform:translateX(0)}
+  .menu-btn{display:flex}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50}
+  .content{padding:16px 14px 70px}
+  .topbar{padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+}
+</style>
+
+<div id="root"></div>
+<div id="toast-stack" class="toast-stack"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================= DB LAYER ============================= */
+var DB_KEY = "condo_demo_db_v1";
+var SESSION_KEY = "condo_demo_session_v1";
+
+function uid(p){ return (p||"id") + "_" + Math.random().toString(36).slice(2,9); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function addDays(iso,n){ var d=new Date(iso+"T00:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function addMonths(iso,n){ var d=new Date(iso+"T00:00:00"); d.setMonth(d.getMonth()+n); return d.toISOString().slice(0,10); }
+function fmtBs(n){ n = Number(n)||0; return "Bs " + n.toLocaleString("es-BO",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtDate(iso){ if(!iso) return "—"; var d=new Date(iso+"T00:00:00"); return d.toLocaleDateString("es-BO",{day:"2-digit",month:"short",year:"numeric"}); }
+function monthLabel(iso){ var d=new Date(iso+"T00:00:00"); return d.toLocaleDateString("es-BO",{month:"short"}).replace(".",""); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+function seedDB(){
+  var today = todayISO();
+  var torres = [
+    {id:"tA", nombre:"Torre A"},
+    {id:"tB", nombre:"Torre B"}
+  ];
+  var deptoDefs = [
+    ["tA","1","101",62,true], ["tA","1","102",58,true],
+    ["tA","2","201",74,true], ["tA","2","202",74,false],
+    ["tA","3","301",90,true], ["tA","3","302",90,true],
+    ["tB","1","101",62,true], ["tB","1","102",58,true],
+    ["tB","2","201",74,true], ["tB","2","202",74,true],
+    ["tB","3","301",90,false],["tB","3","302",96,true]
+  ];
+  var totalSup = deptoDefs.reduce(function(a,d){return a+d[3];},0);
+  var departamentos = deptoDefs.map(function(d,i){
+    return {
+      id:"d"+(i+1), torreId:d[0], piso:d[1], numero:d[2],
+      superficie:d[3], coeficiente: +(d[3]/totalSup*100).toFixed(2),
+      estado: d[4] ? "ocupado" : "vacio",
+      propietarioId:null
+    };
+  });
+  var nombres = ["Mariana Quispe","Jorge Fernández","Carla Rojas","Luis Mamani","Andrea Salazar",
+    "Ricardo Paz","Daniela Vargas","Esteban Condori","Patricia Flores","Diego Choque"];
+  var propietarios = nombres.map(function(n,i){
+    var parts = n.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").split(" ");
+    return {
+      id:"p"+(i+1), nombre:n, ci: (4500000+i*13721)+"",
+      telefono:"7"+(1000000+i*98213), email: parts[0]+"."+parts[1]+"@correo.com",
+      tipo: i%5===0 ? "residente" : "propietario", activo:true
+    };
+  });
+  var ocupados = departamentos.filter(function(d){return d.estado==="ocupado";});
+  ocupados.forEach(function(d,i){ d.propietarioId = propietarios[i % propietarios.length].id; });
+
+  var cuotas = [];
+  var pagos = [];
+  var mesesAtras = [3,2,1,0];
+  ocupados.forEach(function(d,di){
+    mesesAtras.forEach(function(m){
+      var periodo = addMonths(today,-m).slice(0,7);
+      var monto = 350;
+      var recargo = 0;
+      var cid = uid("c");
+      var esMorosoSim = (di % 4 === 1) && m <= 1;
+      var pagadoTotal = !esMorosoSim;
+      var montoPagado = 0;
+      var estado = "pendiente";
+      if(m>0){
+        recargo = esMorosoSim ? 35 : 0;
+      }
+      if(pagadoTotal){
+        montoPagado = monto + recargo; estado="pagado";
+      } else if(di % 4 === 1 && m === 0){
+        montoPagado = 150; estado="parcial"; recargo = 0;
+      } else if(esMorosoSim){
+        montoPagado = 0; estado="pendiente";
+      }
+      cuotas.push({
+        id:cid, departamentoId:d.id, concepto:"ordinaria", periodo:periodo,
+        monto:monto, recargo:recargo, montoPagado:montoPagado, estado:estado,
+        fechaVencimiento: addDays(periodo+"-05",0)
+      });
+      if(montoPagado>0){
+        pagos.push({id:uid("pg"), cuotaId:cid, departamentoId:d.id, monto:montoPagado,
+          fecha: addDays(periodo+"-08",Math.floor(Math.random()*6)), metodo: di%2? "Transferencia":"Efectivo"});
+      }
+    });
+  });
+  // extraordinaria para dos deptos
+  [ocupados[2], ocupados[5]].forEach(function(d){
+    cuotas.push({id:uid("c"), departamentoId:d.id, concepto:"extraordinaria", periodo:today.slice(0,7),
+      monto:200, recargo:0, montoPagado:0, estado:"pendiente", fechaVencimiento: addDays(today,10)});
+  });
+  // multa
+  cuotas.push({id:uid("c"), departamentoId:ocupados[1].id, concepto:"multa", periodo:today.slice(0,7),
+    monto:80, recargo:0, montoPagado:0, estado:"pendiente", fechaVencimiento: addDays(today,5),
+    detalle:"Ruido fuera de horario"});
+
+  var caja = [];
+  var catIngreso = ["Cobranza cuotas","Cobranza multas","Otros ingresos"];
+  var catEgreso = ["Limpieza áreas comunes","Seguridad","Jardinería","Electricidad común","Mantenimiento ascensor","Honorarios administración","Insumos"];
+  for(var m=5;m>=0;m--){
+    var base = addMonths(today,-m).slice(0,7);
+    var ingresoTot = 2600 + Math.round(Math.random()*500);
+    caja.push({id:uid("cj"),tipo:"ingreso",categoria:catIngreso[0],concepto:"Cobranza cuotas ordinarias "+base,
+      monto:ingresoTot, fecha: base+"-07"});
+    if(m%2===0){
+      caja.push({id:uid("cj"),tipo:"ingreso",categoria:catIngreso[1],concepto:"Cobranza multas "+base,
+        monto: 80+Math.round(Math.random()*60), fecha: base+"-10"});
+    }
+    catEgreso.slice(0, 3 + (m%3)).forEach(function(cat,idx){
+      caja.push({id:uid("cj"),tipo:"egreso",categoria:cat,concepto:cat+" — "+base,
+        monto: 120 + Math.round(Math.random()*380), fecha: base+"-"+String(12+idx).padStart(2,"0")});
+    });
+  }
+
+  var areas = [
+    {id:"a1", nombre:"Salón de eventos", capacidad:60, horario:"08:00 - 22:00"},
+    {id:"a2", nombre:"Piscina", capacidad:20, horario:"07:00 - 20:00"},
+    {id:"a3", nombre:"Cancha multiuso", capacidad:10, horario:"06:00 - 22:00"},
+    {id:"a4", nombre:"Parrillero", capacidad:15, horario:"10:00 - 23:00"}
+  ];
+  var reservas = [
+    {id:uid("r"), areaId:"a1", departamentoId:ocupados[0].id, fecha:addDays(today,3), horaInicio:"18:00", horaFin:"22:00", estado:"confirmada"},
+    {id:uid("r"), areaId:"a4", departamentoId:ocupados[4].id, fecha:addDays(today,5), horaInicio:"12:00", horaFin:"16:00", estado:"confirmada"},
+    {id:uid("r"), areaId:"a2", departamentoId:ocupados[2].id, fecha:addDays(today,1), horaInicio:"09:00", horaFin:"11:00", estado:"confirmada"},
+    {id:uid("r"), areaId:"a3", departamentoId:ocupados[6].id, fecha:addDays(today,-4), horaInicio:"17:00", horaFin:"18:00", estado:"realizada"},
+    {id:uid("r"), areaId:"a1", departamentoId:ocupados[7].id, fecha:addDays(today,-10), horaInicio:"19:00", horaFin:"23:00", estado:"realizada"}
+  ];
+
+  var comunicaciones = [
+    {id:uid("co"), titulo:"Corte de agua programado", contenido:"El día "+fmtDate(addDays(today,2))+" se realizará corte de agua de 09:00 a 13:00 por mantenimiento de cisterna.", fecha:addDays(today,-1), autor:"Administración", prioridad:"alta"},
+    {id:uid("co"), titulo:"Asamblea ordinaria de propietarios", contenido:"Se convoca a asamblea el "+fmtDate(addDays(today,12))+" a las 19:00 en el salón de eventos. Agenda: rendición de cuentas y presupuesto anual.", fecha:addDays(today,-2), autor:"Administración", prioridad:"alta"},
+    {id:uid("co"), titulo:"Mantenimiento de ascensor Torre B", contenido:"Se realizará mantenimiento preventivo el "+fmtDate(addDays(today,4))+". El ascensor no estará disponible entre 08:00 y 12:00.", fecha:addDays(today,-3), autor:"Administración", prioridad:"media"},
+    {id:uid("co"), titulo:"Recordatorio: vencimiento de cuota mensual", contenido:"Se recuerda que la cuota ordinaria vence el día 5 de cada mes. Evite recargos realizando el pago a tiempo.", fecha:addDays(today,-5), autor:"Administración/Contabilidad", prioridad:"media"},
+    {id:uid("co"), titulo:"Fumigación de áreas comunes", contenido:"El "+fmtDate(addDays(today,7))+" se fumigarán áreas comunes. Se recomienda mantener mascotas resguardadas.", fecha:addDays(today,-6), autor:"Administración", prioridad:"baja"}
+  ];
+
+  var usuarios = [
+    {id:uid("u"), nombre:"Sofía Herrera", email:"sofia.herrera@condogestion.com", rol:"administrador", activo:true},
+    {id:uid("u"), nombre:"Renata Ibáñez", email:"renata.ibanez@condogestion.com", rol:"contabilidad", activo:true},
+    {id:uid("u"), nombre: propietarios[0].nombre, email:propietarios[0].email, rol:"residente", activo:true, propietarioId:propietarios[0].id}
+  ];
+
+  var auditoria = [
+    {id:uid("au"), usuario:"Sofía Herrera", accion:"Inicio de sesión", fecha:today+"T08:12"},
+    {id:uid("au"), usuario:"Renata Ibáñez", accion:"Registró pago de cuota — Depto "+ (departamentos[0].numero), fecha:today+"T09:04"},
+    {id:uid("au"), usuario:"Sofía Herrera", accion:"Publicó comunicado: Corte de agua programado", fecha:addDays(today,-1)+"T16:40"}
+  ];
+
+  return {
+    torres:torres, departamentos:departamentos, propietarios:propietarios,
+    cuotas:cuotas, pagos:pagos, caja:caja, areas:areas, reservas:reservas,
+    comunicaciones:comunicaciones, usuarios:usuarios, auditoria:auditoria,
+    demoResidenteId: propietarios[0].id
+  };
+}
+
+var DB;
+function loadDB(){
+  try{
+    var raw = localStorage.getItem(DB_KEY);
+    if(raw){ DB = JSON.parse(raw); return; }
+  }catch(e){}
+  DB = seedDB();
+  persist();
+}
+function persist(){
+  try{ localStorage.setItem(DB_KEY, JSON.stringify(DB)); }catch(e){}
+}
+function resetDB(){
+  DB = seedDB(); persist(); toast("Datos de demostración restaurados"); navigate(currentRoute());
+}
+
+function logAudit(accion){
+  var user = SESSION && SESSION.nombre ? SESSION.nombre : "Sistema";
+  DB.auditoria.unshift({id:uid("au"), usuario:user, accion:accion, fecha: new Date().toISOString().slice(0,16)});
+  persist();
+}
+
+/* ============================= SESSION ============================= */
+var SESSION = null;
+function loadSession(){
+  try{ var raw = sessionStorage.getItem(SESSION_KEY); if(raw) SESSION = JSON.parse(raw); }catch(e){}
+}
+function saveSession(){ try{ sessionStorage.setItem(SESSION_KEY, JSON.stringify(SESSION)); }catch(e){} }
+function clearSession(){ SESSION=null; try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){} }
+
+var ROLES = {
+  administrador: {label:"Administrador", ic:"◆", desc:"Configuración, usuarios, permisos y acceso integral al sistema.", nombre:"Sofía Herrera"},
+  contabilidad: {label:"Administración / Contabilidad", ic:"$", desc:"Finanzas, cobranzas, pagos, caja y reportes.", nombre:"Renata Ibáñez"},
+  residente: {label:"Propietario / Residente", ic:"◈", desc:"Consulta de saldos, pagos, reservas y comunicaciones.", nombre:null}
+};
+
+function loginAs(role){
+  var nombre = ROLES[role].nombre;
+  var propietarioId = null;
+  if(role==="residente"){ propietarioId = DB.demoResidenteId; nombre = propByIdSafe(propietarioId).nombre; }
+  SESSION = {rol:role, nombre:nombre, propietarioId:propietarioId};
+  saveSession();
+  logAudit("Inicio de sesión ("+ROLES[role].label+")");
+  location.hash = "#/dashboard";
+}
+function propByIdSafe(id){ return DB.propietarios.find(function(p){return p.id===id;}) || {nombre:"—"}; }
+
+/* ============================= ROUTES / NAV ============================= */
+var NAV = {
+  administrador:[
+    {r:"dashboard", label:"Dashboard", ic:"▤"},
+    {r:"estructura", label:"Estructura", ic:"▦"},
+    {r:"propietarios", label:"Propietarios y residentes", ic:"◍"},
+    {r:"finanzas", label:"Finanzas", ic:"$"},
+    {r:"caja", label:"Caja", ic:"▣"},
+    {r:"areas", label:"Áreas comunes", ic:"⬡"},
+    {r:"comunicaciones", label:"Comunicaciones", ic:"✉"},
+    {r:"reportes", label:"Reportes", ic:"▲"},
+    {r:"usuarios", label:"Usuarios y roles", ic:"⚙"}
+  ],
+  contabilidad:[
+    {r:"dashboard", label:"Dashboard", ic:"▤"},
+    {r:"finanzas", label:"Finanzas", ic:"$"},
+    {r:"caja", label:"Caja", ic:"▣"},
+    {r:"comunicaciones", label:"Comunicaciones", ic:"✉"},
+    {r:"reportes", label:"Reportes", ic:"▲"}
+  ],
+  residente:[
+    {r:"dashboard", label:"Mi panel", ic:"▤"},
+    {r:"estado-cuenta", label:"Estado de cuenta", ic:"$"},
+    {r:"areas", label:"Áreas comunes", ic:"⬡"},
+    {r:"comunicaciones", label:"Comunicaciones", ic:"✉"}
+  ]
+};
+
+function currentRoute(){
+  var h = location.hash.replace("#/","");
+  return h || "dashboard";
+}
+
+window.addEventListener("hashchange", render);
+window.addEventListener("DOMContentLoaded", init);
+
+function init(){
+  loadDB(); loadSession(); render();
+}
+
+/* ============================= RENDER SHELL ============================= */
+function render(){
+  var root = document.getElementById("root");
+  if(!SESSION){ root.innerHTML = renderLogin(); bindLogin(); return; }
+  var route = currentRoute();
+  var allowed = NAV[SESSION.rol].map(function(n){return n.r;});
+  if(allowed.indexOf(route)===-1) route = allowed[0];
+
+  root.innerHTML = renderShell(route);
+  bindShell(route);
+}
+
+function renderLogin(){
+  return '' +
+  '<div class="login-wrap">' +
+    '<div class="login-card">' +
+      '<div class="login-head">' +
+        '<div class="login-mark">CG</div>' +
+        '<h1 style="font-size:24px;margin-bottom:6px">CondoGestión</h1>' +
+        '<p style="color:var(--text-faint);font-size:13.5px">Prototipo interactivo · Sistema integral para condominios</p>' +
+      '</div>' +
+      '<div class="role-grid">' +
+        Object.keys(ROLES).map(function(key){
+          var r = ROLES[key];
+          return '<button class="role-card" data-login="'+key+'">' +
+            '<div class="role-ic">'+r.ic+'</div>' +
+            '<h3>'+esc(r.label)+'</h3>' +
+            '<p>'+esc(r.desc)+'</p>' +
+            '<span class="role-enter">Ingresar →</span>' +
+          '</button>';
+        }).join("") +
+      '</div>' +
+      '<p class="login-foot">Datos de demostración almacenados localmente en tu navegador (localStorage). Ningún dato se envía a un servidor.</p>' +
+    '</div>' +
+  '</div>';
+}
+function bindLogin(){
+  document.querySelectorAll("[data-login]").forEach(function(btn){
+    btn.addEventListener("click", function(){ loginAs(btn.getAttribute("data-login")); });
+  });
+}
+
+function viewTitle(route){
+  var map = {
+    "dashboard": SESSION.rol==="residente" ? ["Mi panel","Resumen de tu departamento"] : ["Dashboard","Resumen general del condominio"],
+    "estructura": ["Estructura","Torres, pisos y departamentos"],
+    "propietarios": ["Propietarios y residentes","Directorio y asociación con departamentos"],
+    "finanzas": ["Finanzas","Cuotas, multas, pagos y saldos"],
+    "estado-cuenta": ["Estado de cuenta","Detalle de tu departamento"],
+    "caja": ["Caja","Ingresos, egresos y saldo"],
+    "areas": ["Áreas comunes","Disponibilidad y reservas"],
+    "comunicaciones": ["Comunicaciones","Avisos del condominio"],
+    "reportes": ["Reportes","Indicadores administrativos y financieros"],
+    "usuarios": ["Usuarios y roles","Accesos, permisos y auditoría"]
+  };
+  return map[route] || ["CondoGestión",""];
+}
+
+function renderShell(route){
+  var nav = NAV[SESSION.rol];
+  var title = viewTitle(route);
+  var initials = (SESSION.nombre||"?").split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase();
+  return '' +
+  '<div class="app-shell">' +
+    '<div class="sidebar-overlay" id="sidebar-overlay" hidden></div>' +
+    '<aside class="sidebar" id="sidebar">' +
+      '<div class="brand"><div class="brand-mark">CG</div><div><div class="brand-name">CondoGestión</div><div class="brand-sub">Prototipo demo</div></div></div>' +
+      nav.map(function(n){
+        return '<button class="nav-link'+(n.r===route?' active':'')+'" data-nav="'+n.r+'"><span class="ic">'+n.ic+'</span>'+esc(n.label)+'</button>';
+      }).join("") +
+      '<div class="sidebar-foot">' +
+        '<div class="role-pill">'+esc(ROLES[SESSION.rol].label)+'</div>' +
+        '<button class="logout-btn" data-logout>⏻ Cambiar de rol</button>' +
+      '</div>' +
+    '</aside>' +
+    '<div class="main">' +
+      '<header class="topbar">' +
+        '<div style="display:flex;align-items:center;gap:10px">' +
+          '<button class="icon-btn menu-btn" id="menu-btn">☰</button>' +
+          '<div><div class="topbar-title">'+esc(title[0])+'</div><div class="topbar-sub">'+esc(title[1])+'</div></div>' +
+        '</div>' +
+        '<div class="topbar-right">' +
+          '<button class="icon-btn" id="theme-btn" title="Cambiar tema">◐</button>' +
+          '<div class="avatar" title="'+esc(SESSION.nombre)+'">'+esc(initials)+'</div>' +
+        '</div>' +
+      '</header>' +
+      '<div class="content" id="content"></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function bindShell(route){
+  document.querySelectorAll("[data-nav]").forEach(function(btn){
+    btn.addEventListener("click", function(){ location.hash = "#/"+btn.getAttribute("data-nav"); });
+  });
+  var logoutBtn = document.querySelector("[data-logout]");
+  if(logoutBtn) logoutBtn.addEventListener("click", function(){ clearSession(); render(); });
+
+  var menuBtn = document.getElementById("menu-btn");
+  var sidebar = document.getElementById("sidebar");
+  var overlay = document.getElementById("sidebar-overlay");
+  if(menuBtn){
+    menuBtn.addEventListener("click", function(){ sidebar.classList.add("open"); overlay.hidden=false; });
+    overlay.addEventListener("click", function(){ sidebar.classList.remove("open"); overlay.hidden=true; });
+    sidebar.querySelectorAll("[data-nav]").forEach(function(b){ b.addEventListener("click", function(){ sidebar.classList.remove("open"); overlay.hidden=true; }); });
+  }
+  var themeBtn = document.getElementById("theme-btn");
+  themeBtn.addEventListener("click", toggleTheme);
+
+  renderView(route);
+}
+
+function toggleTheme(){
+  var el = document.documentElement;
+  var cur = el.getAttribute("data-theme");
+  if(cur==="dark"){ el.setAttribute("data-theme","light"); }
+  else if(cur==="light"){ el.removeAttribute("data-theme"); }
+  else { el.setAttribute("data-theme","dark"); }
+}
+
+/* ============================= TOAST / MODAL ============================= */
+function toast(msg){
+  var stack = document.getElementById("toast-stack");
+  var t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  stack.appendChild(t);
+  setTimeout(function(){ t.style.opacity="0"; t.style.transition="opacity .25s"; setTimeout(function(){ t.remove(); }, 250); }, 2400);
+}
+
+function openModal(title, bodyHtml, opts){
+  opts = opts || {};
+  closeModal();
+  var wrap = document.createElement("div");
+  wrap.className = "modal-backdrop"; wrap.id = "modal-backdrop";
+  wrap.innerHTML =
+    '<div class="modal">' +
+      '<div class="modal-head"><h3>'+esc(title)+'</h3><button class="icon-btn" data-modal-close>✕</button></div>' +
+      '<form id="modal-form">' +
+        '<div class="modal-body">'+bodyHtml+'</div>' +
+        '<div class="modal-foot">' +
+          '<button type="button" class="btn" data-modal-close>Cancelar</button>' +
+          '<button type="submit" class="btn btn-primary">'+(opts.submitLabel||"Guardar")+'</button>' +
+        '</div>' +
+      '</form>' +
+    '</div>';
+  document.body.appendChild(wrap);
+  wrap.addEventListener("click", function(e){ if(e.target===wrap) closeModal(); });
+  wrap.querySelectorAll("[data-modal-close]").forEach(function(b){ b.addEventListener("click", closeModal); });
+  var form = wrap.querySelector("#modal-form");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var data = {};
+    new FormData(form).forEach(function(v,k){ data[k]=v; });
+    if(opts.onSubmit){ var ok = opts.onSubmit(data); if(ok!==false) closeModal(); }
+  });
+  var firstInput = wrap.querySelector("input,select,textarea");
+  if(firstInput) setTimeout(function(){ firstInput.focus(); }, 30);
+}
+function closeModal(){ var m = document.getElementById("modal-backdrop"); if(m) m.remove(); }
+
+function confirmAction(msg, onYes){
+  openModal("Confirmar acción", '<p style="font-size:13.5px;color:var(--text-dim)">'+esc(msg)+'</p>', {
+    submitLabel:"Sí, continuar",
+    onSubmit:function(){ onYes(); return true; }
+  });
+}
+
+/* ============================= HELPERS (data lookups) ============================= */
+function torreNombre(id){ var t=DB.torres.find(function(x){return x.id===id;}); return t?t.nombre:"—"; }
+function deptoLabel(id){ var d=DB.departamentos.find(function(x){return x.id===id;}); if(!d) return "—"; return torreNombre(d.torreId)+" · "+d.piso+"-"+d.numero; }
+function deptoById(id){ return DB.departamentos.find(function(x){return x.id===id;}); }
+function propietarioNombre(id){ var p=DB.propietarios.find(function(x){return x.id===id;}); return p?p.nombre:"Sin asignar"; }
+function areaNombre(id){ var a=DB.areas.find(function(x){return x.id===id;}); return a?a.nombre:"—"; }
+
+function saldoDepto(deptoId){
+  return DB.cuotas.filter(function(c){return c.departamentoId===deptoId;})
+    .reduce(function(sum,c){ return sum + (c.monto + (c.recargo||0) - c.montoPagado); }, 0);
+}
+function estadoCuentaDepto(deptoId){
+  var s = saldoDepto(deptoId);
+  if(s<=0.01) return "al día";
+  var venc = DB.cuotas.filter(function(c){return c.departamentoId===deptoId && c.estado!=="pagado" && c.fechaVencimiento < todayISO();});
+  return venc.length ? "moroso" : "pendiente";
+}
+function badgeEstadoCuenta(estado){
+  if(estado==="al día") return '<span class="badge badge-success">Al día</span>';
+  if(estado==="pendiente") return '<span class="badge badge-warning">Pendiente</span>';
+  return '<span class="badge badge-danger">Moroso</span>';
+}
+function badgeCuota(c){
+  if(c.estado==="pagado") return '<span class="badge badge-success">Pagado</span>';
+  if(c.estado==="parcial") return '<span class="badge badge-warning">Parcial</span>';
+  var vencida = c.fechaVencimiento < todayISO();
+  return vencida ? '<span class="badge badge-danger">Vencido</span>' : '<span class="badge badge-info">Pendiente</span>';
+}
+
+/* ============================= VIEW ROUTER ============================= */
+function renderView(route){
+  var fn = VIEWS[route] || VIEWS.dashboard;
+  var el = document.getElementById("content");
+  el.innerHTML = fn();
+  if(BINDERS[route]) BINDERS[route]();
+}
+
+var VIEWS = {};
+var BINDERS = {};
+
+/* ============================= DASHBOARD ============================= */
+VIEWS.dashboard = function(){
+  if(SESSION.rol==="residente") return residenteDashboard();
+  return adminDashboard();
+};
+
+function adminDashboard(){
+  var deptos = DB.departamentos;
+  var ocupados = deptos.filter(function(d){return d.estado==="ocupado";});
+  var totalPropietarios = DB.propietarios.length;
+  var morosos = ocupados.filter(function(d){return estadoCuentaDepto(d.id)==="moroso";});
+  var saldoTotal = ocupados.reduce(function(s,d){return s+Math.max(0,saldoDepto(d.id));},0);
+  var thisMonth = todayISO().slice(0,7);
+  var ingresosMes = DB.caja.filter(function(c){return c.tipo==="ingreso" && c.fecha.slice(0,7)===thisMonth;}).reduce(function(s,c){return s+c.monto;},0);
+  var egresosMes = DB.caja.filter(function(c){return c.tipo==="egreso" && c.fecha.slice(0,7)===thisMonth;}).reduce(function(s,c){return s+c.monto;},0);
+  var saldoCaja = DB.caja.reduce(function(s,c){return s+(c.tipo==="ingreso"?c.monto:-c.monto);},0);
+  var reservasProx = DB.reservas.filter(function(r){return r.fecha>=todayISO();}).length;
+  var comunicadosRecientes = DB.comunicaciones.filter(function(c){return c.fecha>=addDays(todayISO(),-7);}).length;
+
+  var kpis = [
+    {label:"Departamentos", value:deptos.length+"", sub:ocupados.length+" ocupados", ic:"▦", tone:"info"},
+    {label:"Propietarios", value:totalPropietarios+"", sub:"registrados", ic:"◍", tone:"info"},
+    {label:"Saldo por cobrar", value:fmtBs(saldoTotal), sub:morosos.length+" deptos morosos", ic:"$", tone: morosos.length? "danger":"success"},
+    {label:"Caja — mes actual", value:fmtBs(ingresosMes-egresosMes), sub:"ingresos - egresos", ic:"▣", tone:(ingresosMes-egresosMes)>=0?"success":"danger"},
+    {label:"Saldo de caja", value:fmtBs(saldoCaja), sub:"acumulado", ic:"◆", tone:"info"},
+    {label:"Reservas próximas", value:reservasProx+"", sub:"áreas comunes", ic:"⬡", tone:"info"}
+  ];
+
+  return '' +
+  kpiGrid(kpis) +
+  '<div class="grid two-col">' +
+    '<div class="card">' +
+      '<div class="section-title">Ingresos vs. egresos (últimos 6 meses)</div>' +
+      cajaBarChart() +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="section-title">Morosidad</div>' +
+      morosidadDonut(ocupados) +
+    '</div>' +
+  '</div>' +
+  '<div class="grid two-col" style="margin-top:14px">' +
+    '<div class="card">' +
+      '<div class="section-title">Comunicados recientes</div>' +
+      renderComunicadosList(DB.comunicaciones.slice(0,3)) +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="section-title">Próximas reservas</div>' +
+      renderReservasMini() +
+    '</div>' +
+  '</div>';
+}
+
+function kpiGrid(kpis){
+  return '<div class="grid kpi-grid">' + kpis.map(function(k){
+    var toneBg = k.tone==="danger"?"var(--danger-bg)":k.tone==="success"?"var(--success-bg)":"var(--info-bg)";
+    var toneFg = k.tone==="danger"?"var(--danger)":k.tone==="success"?"var(--success)":"var(--info)";
+    return '<div class="card kpi">' +
+      '<div class="kpi-top"><span class="kpi-label">'+esc(k.label)+'</span>' +
+      '<span class="kpi-ic" style="background:'+toneBg+';color:'+toneFg+'">'+k.ic+'</span></div>' +
+      '<div class="kpi-value num">'+k.value+'</div>' +
+      '<div class="kpi-trend" style="color:var(--text-faint)">'+esc(k.sub)+'</div>' +
+    '</div>';
+  }).join("") + '</div>';
+}
+
+function cajaBarChart(){
+  var months = [];
+  for(var i=5;i>=0;i--) months.push(addMonths(todayISO(),-i).slice(0,7));
+  var data = months.map(function(m){
+    var ing = DB.caja.filter(function(c){return c.tipo==="ingreso"&&c.fecha.slice(0,7)===m;}).reduce(function(s,c){return s+c.monto;},0);
+    var egr = DB.caja.filter(function(c){return c.tipo==="egreso"&&c.fecha.slice(0,7)===m;}).reduce(function(s,c){return s+c.monto;},0);
+    return {m:m, ing:ing, egr:egr};
+  });
+  var max = Math.max.apply(null, data.map(function(d){return Math.max(d.ing,d.egr);})) || 1;
+  var bars = data.map(function(d){
+    var hIng = Math.round(d.ing/max*100);
+    var hEgr = Math.round(d.egr/max*100);
+    var label = monthLabel(d.m+"-01");
+    return '<div class="col">' +
+      '<div style="display:flex;gap:3px;align-items:flex-end;height:120px;width:100%;justify-content:center">' +
+        '<div title="Ingresos '+esc(label)+': '+fmtBs(d.ing)+'" style="width:12px;height:'+hIng+'%;background:var(--success);border-radius:3px 3px 0 0;min-height:2px"></div>' +
+        '<div title="Egresos '+esc(label)+': '+fmtBs(d.egr)+'" style="width:12px;height:'+hEgr+'%;background:var(--danger);border-radius:3px 3px 0 0;min-height:2px"></div>' +
+      '</div>' +
+      '<div class="lbl">'+esc(label)+'</div>' +
+    '</div>';
+  }).join("");
+  return '<div class="bar-chart">'+bars+'</div>' +
+    '<div class="legend"><span><i style="background:var(--success)"></i>Ingresos</span><span><i style="background:var(--danger)"></i>Egresos</span></div>';
+}
+
+function morosidadDonut(ocupados){
+  var alDia=0,pend=0,mor=0;
+  ocupados.forEach(function(d){
+    var e = estadoCuentaDepto(d.id);
+    if(e==="al día") alDia++; else if(e==="pendiente") pend++; else mor++;
+  });
+  var total = ocupados.length || 1;
+  var p1 = alDia/total*360, p2 = pend/total*360, p3 = mor/total*360;
+  var css = 'conic-gradient(var(--success) 0deg '+p1+'deg, var(--warning) '+p1+'deg '+(p1+p2)+'deg, var(--danger) '+(p1+p2)+'deg '+(p1+p2+p3)+'deg)';
+  return '<div class="donut-wrap">' +
+    '<div class="donut" style="background:'+css+'"></div>' +
+    '<div style="flex:1;min-width:150px">' +
+      '<div class="stat-row"><span><span class="badge badge-success" style="margin-right:6px"></span>Al día</span><b class="num">'+alDia+'</b></div>' +
+      '<div class="stat-row"><span><span class="badge badge-warning" style="margin-right:6px"></span>Pendiente</span><b class="num">'+pend+'</b></div>' +
+      '<div class="stat-row"><span><span class="badge badge-danger" style="margin-right:6px"></span>Moroso</span><b class="num">'+mor+'</b></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderComunicadosList(list){
+  if(!list.length) return '<p class="muted" style="font-size:13px">Sin comunicados.</p>';
+  return '<div class="list-comm">' + list.map(function(c){
+    return '<div class="comm-item"><h4>'+esc(c.titulo)+'</h4>' +
+      '<div class="meta">'+prioridadBadge(c.prioridad)+'<span>'+fmtDate(c.fecha)+'</span></div>' +
+      '<p>'+esc(c.contenido)+'</p></div>';
+  }).join("") + '</div>';
+}
+function prioridadBadge(p){
+  if(p==="alta") return '<span class="badge badge-danger">Alta</span>';
+  if(p==="media") return '<span class="badge badge-warning">Media</span>';
+  return '<span class="badge badge-neutral">Baja</span>';
+}
+function renderReservasMini(){
+  var list = DB.reservas.filter(function(r){return r.fecha>=todayISO();}).sort(function(a,b){return a.fecha<b.fecha?-1:1;}).slice(0,4);
+  if(!list.length) return '<p class="muted" style="font-size:13px">No hay reservas próximas.</p>';
+  return '<div class="avail-list">' + list.map(function(r){
+    return '<div class="avail-item"><div><b style="font-size:13.5px">'+esc(areaNombre(r.areaId))+'</b>' +
+      '<div class="muted" style="font-size:12px">'+esc(deptoLabel(r.departamentoId))+' · '+r.horaInicio+'–'+r.horaFin+'</div></div>' +
+      '<span class="badge badge-info">'+fmtDate(r.fecha)+'</span></div>';
+  }).join("") + '</div>';
+}
+
+/* ---- Residente dashboard ---- */
+function residenteDashboard(){
+  var depto = DB.departamentos.find(function(d){return d.propietarioId===SESSION.propietarioId;});
+  if(!depto) return '<div class="card">No tienes un departamento asociado en esta demo.</div>';
+  var saldo = saldoDepto(depto.id);
+  var estado = estadoCuentaDepto(depto.id);
+  var proxima = DB.cuotas.filter(function(c){return c.departamentoId===depto.id && c.estado!=="pagado";})
+    .sort(function(a,b){return a.fechaVencimiento<b.fechaVencimiento?-1:1;})[0];
+  var misReservas = DB.reservas.filter(function(r){return r.departamentoId===depto.id;}).sort(function(a,b){return b.fecha<a.fecha?-1:1;});
+  var kpis = [
+    {label:"Mi departamento", value:torreNombre(depto.torreId)+" "+depto.piso+"-"+depto.numero, sub:depto.superficie+" m² · coef. "+depto.coeficiente+"%", ic:"▦", tone:"info"},
+    {label:"Saldo pendiente", value:fmtBs(Math.max(0,saldo)), sub: estado, ic:"$", tone: saldo<=0.01?"success":(estado==="moroso"?"danger":"warning")},
+    {label:"Próximo vencimiento", value: proxima?fmtDate(proxima.fechaVencimiento):"—", sub: proxima? fmtBs(proxima.monto+proxima.recargo-proxima.montoPagado)+" por pagar":"Sin pendientes", ic:"◷", tone:"info"}
+  ];
+  return '' +
+  kpiGrid(kpis) +
+  '<div class="grid two-col">' +
+    '<div class="card">' +
+      '<div class="section-title">Últimos movimientos</div>' +
+      renderMisCuotas(depto.id, 4) +
+      '<div style="margin-top:12px"><button class="btn btn-primary btn-sm" data-nav-to="estado-cuenta">Ver estado de cuenta completo →</button></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="section-title">Mis reservas</div>' +
+      (misReservas.length ? '<div class="avail-list">'+misReservas.slice(0,4).map(function(r){
+        return '<div class="avail-item"><div><b style="font-size:13.5px">'+esc(areaNombre(r.areaId))+'</b>' +
+          '<div class="muted" style="font-size:12px">'+r.horaInicio+'–'+r.horaFin+'</div></div>' +
+          '<span class="badge '+(r.estado==="confirmada"?"badge-info":"badge-neutral")+'">'+fmtDate(r.fecha)+'</span></div>';
+      }).join("")+'</div>' : '<p class="muted" style="font-size:13px">Sin reservas.</p>') +
+      '<div style="margin-top:12px"><button class="btn btn-sm" data-nav-to="areas">Reservar área común →</button></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="card" style="margin-top:14px">' +
+    '<div class="section-title">Comunicados recientes</div>' +
+    renderComunicadosList(DB.comunicaciones.slice(0,3)) +
+  '</div>';
+}
+function renderMisCuotas(deptoId,limit){
+  var list = DB.cuotas.filter(function(c){return c.departamentoId===deptoId;}).sort(function(a,b){return b.periodo<a.periodo?-1:1;}).slice(0,limit||100);
+  if(!list.length) return '<p class="muted" style="font-size:13px">Sin registros.</p>';
+  return '<div class="table-wrap"><table><thead><tr><th>Periodo</th><th>Concepto</th><th>Monto</th><th>Estado</th></tr></thead><tbody>' +
+    list.map(function(c){
+      return '<tr><td class="num">'+esc(c.periodo)+'</td><td>'+conceptoLabel(c.concepto)+'</td>' +
+        '<td class="num">'+fmtBs(c.monto+c.recargo)+'</td><td>'+badgeCuota(c)+'</td></tr>';
+    }).join("") + '</tbody></table></div>';
+}
+function conceptoLabel(c){
+  return {ordinaria:"Cuota ordinaria", extraordinaria:"Cuota extraordinaria", multa:"Multa"}[c] || c;
+}
+
+BINDERS.dashboard = function(){
+  document.querySelectorAll("[data-nav-to]").forEach(function(b){
+    b.addEventListener("click", function(){ location.hash = "#/"+b.getAttribute("data-nav-to"); });
+  });
+};
+
+/* ============================= ESTRUCTURA ============================= */
+VIEWS.estructura = function(){
+  var rows = DB.departamentos.map(function(d){
+    return '<tr>' +
+      '<td>'+esc(torreNombre(d.torreId))+'</td>' +
+      '<td class="num">'+esc(d.piso)+'</td>' +
+      '<td><b>'+esc(d.numero)+'</b></td>' +
+      '<td class="num">'+d.superficie+' m²</td>' +
+      '<td class="num">'+d.coeficiente+'%</td>' +
+      '<td>'+(d.estado==="ocupado"?'<span class="badge badge-success">Ocupado</span>':'<span class="badge badge-neutral">Vacío</span>')+'</td>' +
+      '<td>'+esc(propietarioNombre(d.propietarioId))+'</td>' +
+      '<td class="cell-actions"><button class="btn btn-sm" data-edit-depto="'+d.id+'">Editar</button>' +
+      '<button class="btn btn-sm btn-danger" data-del-depto="'+d.id+'">Eliminar</button></td>' +
+    '</tr>';
+  }).join("");
+  return '' +
+  '<div class="view-head"><div><h2>Estructura del condominio</h2><div class="desc">'+DB.torres.length+' torres · '+DB.departamentos.length+' departamentos</div></div>' +
+    '<div style="display:flex;gap:8px"><button class="btn" data-add-torre>+ Torre</button><button class="btn btn-primary" data-add-depto>+ Departamento</button></div>' +
+  '</div>' +
+  '<div class="table-wrap"><table><thead><tr><th>Torre</th><th>Piso</th><th>N°</th><th>Superficie</th><th>Coeficiente</th><th>Estado</th><th>Propietario</th><th></th></tr></thead>' +
+  '<tbody>'+(rows||'<tr><td colspan="8" class="empty-row">Sin departamentos registrados.</td></tr>')+'</tbody></table></div>';
+};
+function deptoFormHtml(d){
+  d = d || {};
+  return '<div class="field"><label>Torre</label><select name="torreId" required>' +
+      DB.torres.map(function(t){return '<option value="'+t.id+'"'+(d.torreId===t.id?' selected':'')+'>'+esc(t.nombre)+'</option>';}).join("") +
+    '</select></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Piso</label><input name="piso" value="'+esc(d.piso||"")+'" required></div>' +
+      '<div class="field"><label>N° departamento</label><input name="numero" value="'+esc(d.numero||"")+'" required></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Superficie (m²)</label><input type="number" step="0.01" name="superficie" value="'+(d.superficie||"")+'" required></div>' +
+      '<div class="field"><label>Coeficiente (%)</label><input type="number" step="0.01" name="coeficiente" value="'+(d.coeficiente||"")+'" required></div>' +
+    '</div>' +
+    '<div class="field"><label>Estado</label><select name="estado">' +
+      '<option value="ocupado"'+(d.estado==="ocupado"?' selected':'')+'>Ocupado</option>' +
+      '<option value="vacio"'+(d.estado==="vacio"?' selected':'')+'>Vacío</option>' +
+    '</select></div>' +
+    '<div class="field"><label>Propietario asociado</label><select name="propietarioId">' +
+      '<option value="">Sin asignar</option>' +
+      DB.propietarios.map(function(p){return '<option value="'+p.id+'"'+(d.propietarioId===p.id?' selected':'')+'>'+esc(p.nombre)+'</option>';}).join("") +
+    '</select></div>';
+}
+BINDERS.estructura = function(){
+  var c = document.getElementById("content");
+  c.querySelector("[data-add-torre]").addEventListener("click", function(){
+    openModal("Nueva torre / bloque", '<div class="field"><label>Nombre</label><input name="nombre" placeholder="Ej. Torre C" required></div>', {
+      onSubmit:function(data){
+        DB.torres.push({id:uid("t"), nombre:data.nombre});
+        persist(); logAudit("Creó torre: "+data.nombre); toast("Torre agregada"); renderView("estructura");
+      }
+    });
+  });
+  c.querySelector("[data-add-depto]").addEventListener("click", function(){
+    openModal("Nuevo departamento", deptoFormHtml(), {
+      onSubmit:function(data){
+        DB.departamentos.push({id:uid("d"), torreId:data.torreId, piso:data.piso, numero:data.numero,
+          superficie:+data.superficie, coeficiente:+data.coeficiente, estado:data.estado, propietarioId: data.propietarioId||null});
+        persist(); logAudit("Creó departamento "+data.numero); toast("Departamento agregado"); renderView("estructura");
+      }
+    });
+  });
+  c.querySelectorAll("[data-edit-depto]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var d = deptoById(btn.getAttribute("data-edit-depto"));
+      openModal("Editar departamento", deptoFormHtml(d), {
+        onSubmit:function(data){
+          d.torreId=data.torreId; d.piso=data.piso; d.numero=data.numero; d.superficie=+data.superficie;
+          d.coeficiente=+data.coeficiente; d.estado=data.estado; d.propietarioId=data.propietarioId||null;
+          persist(); logAudit("Editó departamento "+d.numero); toast("Departamento actualizado"); renderView("estructura");
+        }
+      });
+    });
+  });
+  c.querySelectorAll("[data-del-depto]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var id = btn.getAttribute("data-del-depto");
+      confirmAction("¿Eliminar este departamento? Esta acción no se puede deshacer.", function(){
+        DB.departamentos = DB.departamentos.filter(function(d){return d.id!==id;});
+        persist(); logAudit("Eliminó un departamento"); toast("Departamento eliminado"); renderView("estructura");
+      });
+    });
+  });
+};
+
+/* ============================= PROPIETARIOS ============================= */
+VIEWS.propietarios = function(){
+  var rows = DB.propietarios.map(function(p){
+    var deptos = DB.departamentos.filter(function(d){return d.propietarioId===p.id;});
+    return '<tr>' +
+      '<td><b>'+esc(p.nombre)+'</b><div class="muted" style="font-size:11.5px">'+esc(p.email)+'</div></td>' +
+      '<td>'+esc(p.ci)+'</td><td>'+esc(p.telefono)+'</td>' +
+      '<td>'+(p.tipo==="propietario"?'<span class="badge badge-info">Propietario</span>':'<span class="badge badge-neutral">Residente</span>')+'</td>' +
+      '<td>'+(deptos.length? deptos.map(function(d){return torreNombre(d.torreId)+" "+d.piso+"-"+d.numero;}).join(", ") : '<span class="muted">Sin depto.</span>')+'</td>' +
+      '<td class="cell-actions"><button class="btn btn-sm" data-view-hist="'+p.id+'">Historial</button>' +
+      '<button class="btn btn-sm" data-edit-prop="'+p.id+'">Editar</button></td>' +
+    '</tr>';
+  }).join("");
+  return '' +
+  '<div class="view-head"><div><h2>Propietarios y residentes</h2><div class="desc">'+DB.propietarios.length+' registrados</div></div>' +
+    '<button class="btn btn-primary" data-add-prop>+ Propietario</button></div>' +
+  '<div class="table-wrap"><table><thead><tr><th>Nombre</th><th>CI</th><th>Teléfono</th><th>Tipo</th><th>Departamento(s)</th><th></th></tr></thead>' +
+  '<tbody>'+(rows||'<tr><td colspan="6" class="empty-row">Sin registros.</td></tr>')+'</tbody></table></div>';
+};
+function propFormHtml(p){
+  p = p||{};
+  return '<div class="field"><label>Nombre completo</label><input name="nombre" value="'+esc(p.nombre||"")+'" required></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>CI</label><input name="ci" value="'+esc(p.ci||"")+'" required></div>' +
+      '<div class="field"><label>Teléfono</label><input name="telefono" value="'+esc(p.telefono||"")+'" required></div>' +
+    '</div>' +
+    '<div class="field"><label>Correo</label><input type="email" name="email" value="'+esc(p.email||"")+'" required></div>' +
+    '<div class="field"><label>Tipo</label><select name="tipo">' +
+      '<option value="propietario"'+(p.tipo==="propietario"?' selected':'')+'>Propietario</option>' +
+      '<option value="residente"'+(p.tipo==="residente"?' selected':'')+'>Residente (no propietario)</option>' +
+    '</select></div>';
+}
+BINDERS.propietarios = function(){
+  var c = document.getElementById("content");
+  c.querySelector("[data-add-prop]").addEventListener("click", function(){
+    openModal("Nuevo propietario / residente", propFormHtml(), {
+      onSubmit:function(data){
+        DB.propietarios.push({id:uid("p"), nombre:data.nombre, ci:data.ci, telefono:data.telefono, email:data.email, tipo:data.tipo, activo:true});
+        persist(); logAudit("Registró propietario: "+data.nombre); toast("Propietario agregado"); renderView("propietarios");
+      }
+    });
+  });
+  c.querySelectorAll("[data-edit-prop]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var p = DB.propietarios.find(function(x){return x.id===btn.getAttribute("data-edit-prop");});
+      openModal("Editar propietario", propFormHtml(p), {
+        onSubmit:function(data){
+          p.nombre=data.nombre; p.ci=data.ci; p.telefono=data.telefono; p.email=data.email; p.tipo=data.tipo;
+          persist(); logAudit("Editó propietario: "+p.nombre); toast("Datos actualizados"); renderView("propietarios");
+        }
+      });
+    });
+  });
+  c.querySelectorAll("[data-view-hist]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var pid = btn.getAttribute("data-view-hist");
+      var p = DB.propietarios.find(function(x){return x.id===pid;});
+      var deptos = DB.departamentos.filter(function(d){return d.propietarioId===pid;});
+      var pagos = DB.pagos.filter(function(pg){return deptos.some(function(d){return d.id===pg.departamentoId;});})
+        .sort(function(a,b){return b.fecha<a.fecha?-1:1;});
+      var body = '<div class="hint" style="margin-bottom:10px">Historial de asociación y pagos de '+esc(p.nombre)+'</div>' +
+        (pagos.length ? '<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Depto</th><th>Monto</th><th>Método</th></tr></thead><tbody>' +
+          pagos.slice(0,10).map(function(pg){
+            return '<tr><td>'+fmtDate(pg.fecha)+'</td><td>'+esc(deptoLabel(pg.departamentoId))+'</td><td class="num">'+fmtBs(pg.monto)+'</td><td>'+esc(pg.metodo)+'</td></tr>';
+          }).join("") + '</tbody></table></div>' : '<p class="muted" style="font-size:13px">Sin pagos registrados.</p>');
+      openModal("Historial — "+p.nombre, body, {submitLabel:"Cerrar", onSubmit:function(){ return true; }});
+    });
+  });
+};
+
+/* ============================= FINANZAS ============================= */
+VIEWS.finanzas = function(){
+  var totalPendiente = DB.cuotas.filter(function(c){return c.estado!=="pagado";})
+    .reduce(function(s,c){return s+(c.monto+c.recargo-c.montoPagado);},0);
+  var cuotasList = DB.cuotas.slice().sort(function(a,b){return b.periodo<a.periodo?-1:1;});
+  var rows = cuotasList.map(function(c){
+    var saldo = c.monto+c.recargo-c.montoPagado;
+    return '<tr>' +
+      '<td>'+esc(deptoLabel(c.departamentoId))+'</td>' +
+      '<td>'+conceptoLabel(c.concepto)+'</td>' +
+      '<td class="num">'+esc(c.periodo)+'</td>' +
+      '<td class="num">'+fmtBs(c.monto)+'</td>' +
+      '<td class="num">'+fmtBs(c.recargo)+'</td>' +
+      '<td class="num">'+fmtBs(saldo)+'</td>' +
+      '<td>'+badgeCuota(c)+'</td>' +
+      '<td class="cell-actions">'+(saldo>0.01 ? '<button class="btn btn-sm btn-primary" data-pagar="'+c.id+'">Registrar pago</button>' : '<span class="muted" style="font-size:12px">Cancelada</span>')+'</td>' +
+    '</tr>';
+  }).join("");
+  return '' +
+  '<div class="notice-banner">ⓘ Pagos en línea e integraciones bancarias <span class="tag-soon" style="margin-left:6px">próxima ampliación</span> — en esta versión los pagos se registran manualmente.</div>' +
+  kpiGrid([
+    {label:"Saldo total pendiente", value:fmtBs(totalPendiente), sub:"todas las unidades", ic:"$", tone: totalPendiente>0?"warning":"success"},
+    {label:"Cuotas registradas", value:DB.cuotas.length+"", sub:"histórico", ic:"▤", tone:"info"},
+    {label:"Pagos registrados", value:DB.pagos.length+"", sub:"histórico", ic:"◆", tone:"info"}
+  ]) +
+  '<div class="view-head"><div><h2>Cuotas y multas</h2><div class="desc">Ordinarias, extraordinarias y multas por departamento</div></div>' +
+    '<button class="btn btn-primary" data-add-cuota>+ Generar cuota / multa</button></div>' +
+  '<div class="table-wrap"><table><thead><tr><th>Depto.</th><th>Concepto</th><th>Periodo</th><th>Monto</th><th>Recargo</th><th>Saldo</th><th>Estado</th><th></th></tr></thead>' +
+  '<tbody>'+(rows||'<tr><td colspan="8" class="empty-row">Sin cuotas registradas.</td></tr>')+'</tbody></table></div>';
+};
+function cuotaFormHtml(){
+  return '<div class="field"><label>Departamento</label><select name="departamentoId" required>' +
+      DB.departamentos.filter(function(d){return d.estado==="ocupado";}).map(function(d){
+        return '<option value="'+d.id+'">'+esc(deptoLabel(d.id))+'</option>';
+      }).join("") + '</select></div>' +
+    '<div class="field"><label>Concepto</label><select name="concepto">' +
+      '<option value="ordinaria">Cuota ordinaria</option><option value="extraordinaria">Cuota extraordinaria</option><option value="multa">Multa</option>' +
+    '</select></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Periodo</label><input type="month" name="periodo" value="'+todayISO().slice(0,7)+'" required></div>' +
+      '<div class="field"><label>Monto (Bs)</label><input type="number" step="0.01" name="monto" required></div>' +
+    '</div>' +
+    '<div class="field"><label>Vencimiento</label><input type="date" name="fechaVencimiento" value="'+addDays(todayISO(),10)+'" required></div>';
+}
+function pagoFormHtml(c){
+  var saldo = c.monto+c.recargo-c.montoPagado;
+  return '<p class="hint" style="margin-bottom:10px">'+esc(deptoLabel(c.departamentoId))+' · '+conceptoLabel(c.concepto)+' '+esc(c.periodo)+' · Saldo actual: <b class="num">'+fmtBs(saldo)+'</b></p>' +
+    '<div class="field"><label>Monto a pagar (Bs)</label><input type="number" step="0.01" name="monto" max="'+saldo.toFixed(2)+'" value="'+saldo.toFixed(2)+'" required></div>' +
+    '<div class="field"><label>Método de pago</label><select name="metodo"><option>Efectivo</option><option>Transferencia</option><option>QR</option></select></div>' +
+    '<div class="field"><label>Fecha de pago</label><input type="date" name="fecha" value="'+todayISO()+'" required></div>';
+}
+BINDERS.finanzas = function(){
+  var c = document.getElementById("content");
+  c.querySelector("[data-add-cuota]").addEventListener("click", function(){
+    openModal("Generar cuota / multa", cuotaFormHtml(), {
+      onSubmit:function(data){
+        DB.cuotas.push({id:uid("c"), departamentoId:data.departamentoId, concepto:data.concepto, periodo:data.periodo,
+          monto:+data.monto, recargo:0, montoPagado:0, estado:"pendiente", fechaVencimiento:data.fechaVencimiento});
+        persist(); logAudit("Generó "+data.concepto+" para "+deptoLabel(data.departamentoId)); toast("Cuota generada"); renderView("finanzas");
+      }
+    });
+  });
+  c.querySelectorAll("[data-pagar]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var cu = DB.cuotas.find(function(x){return x.id===btn.getAttribute("data-pagar");});
+      openModal("Registrar pago", pagoFormHtml(cu), {
+        submitLabel:"Registrar pago",
+        onSubmit:function(data){
+          var monto = Math.min(+data.monto, cu.monto+cu.recargo-cu.montoPagado);
+          if(monto<=0){ toast("Monto inválido"); return false; }
+          cu.montoPagado += monto;
+          cu.estado = (cu.monto+cu.recargo-cu.montoPagado) <= 0.01 ? "pagado" : "parcial";
+          DB.pagos.push({id:uid("pg"), cuotaId:cu.id, departamentoId:cu.departamentoId, monto:monto, fecha:data.fecha, metodo:data.metodo});
+          DB.caja.push({id:uid("cj"), tipo:"ingreso", categoria: cu.concepto==="multa"?"Cobranza multas":"Cobranza cuotas", concepto:conceptoLabel(cu.concepto)+" — "+deptoLabel(cu.departamentoId), monto:monto, fecha:data.fecha});
+          persist(); logAudit("Registró pago de "+fmtBs(monto)+" — "+deptoLabel(cu.departamentoId));
+          toast("Pago registrado"); renderView("finanzas");
+        }
+      });
+    });
+  });
+};
+
+/* ---- Estado de cuenta (residente) ---- */
+VIEWS["estado-cuenta"] = function(){
+  var depto = DB.departamentos.find(function(d){return d.propietarioId===SESSION.propietarioId;});
+  if(!depto) return '<div class="card">No tienes un departamento asociado.</div>';
+  var saldo = saldoDepto(depto.id);
+  var estado = estadoCuentaDepto(depto.id);
+  return '' +
+  '<div class="notice-banner">ⓘ Pagos en línea <span class="tag-soon" style="margin-left:6px">próxima ampliación</span> — por ahora los pagos se registran en administración.</div>' +
+  '<div class="card" style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">' +
+    '<div><div class="muted" style="font-size:12px">Saldo pendiente — '+esc(deptoLabel(depto.id))+'</div>' +
+    '<div style="font-family:Sora;font-size:26px;font-weight:700" class="num">'+fmtBs(Math.max(0,saldo))+'</div></div>' +
+    badgeEstadoCuenta(estado) +
+  '</div>' +
+  '<div class="section-title">Detalle de cuotas y pagos</div>' +
+  renderMisCuotas(depto.id);
+};
+
+/* ============================= CAJA ============================= */
+VIEWS.caja = function(){
+  var saldo = DB.caja.reduce(function(s,c){return s+(c.tipo==="ingreso"?c.monto:-c.monto);},0);
+  var thisMonth = todayISO().slice(0,7);
+  var ingresosMes = DB.caja.filter(function(c){return c.tipo==="ingreso"&&c.fecha.slice(0,7)===thisMonth;}).reduce(function(s,c){return s+c.monto;},0);
+  var egresosMes = DB.caja.filter(function(c){return c.tipo==="egreso"&&c.fecha.slice(0,7)===thisMonth;}).reduce(function(s,c){return s+c.monto;},0);
+  var rows = DB.caja.slice().sort(function(a,b){return b.fecha<a.fecha?-1:1;}).map(function(c){
+    return '<tr><td>'+fmtDate(c.fecha)+'</td>' +
+      '<td>'+(c.tipo==="ingreso"?'<span class="badge badge-success">Ingreso</span>':'<span class="badge badge-danger">Egreso</span>')+'</td>' +
+      '<td>'+esc(c.categoria)+'</td><td>'+esc(c.concepto)+'</td>' +
+      '<td class="num" style="color:'+(c.tipo==="ingreso"?"var(--success)":"var(--danger)")+'">'+(c.tipo==="ingreso"?"+":"-")+fmtBs(c.monto)+'</td></tr>';
+  }).join("");
+  return '' +
+  kpiGrid([
+    {label:"Saldo de caja", value:fmtBs(saldo), sub:"acumulado", ic:"▣", tone:"info"},
+    {label:"Ingresos del mes", value:fmtBs(ingresosMes), sub:thisMonth, ic:"↑", tone:"success"},
+    {label:"Egresos del mes", value:fmtBs(egresosMes), sub:thisMonth, ic:"↓", tone:"danger"}
+  ]) +
+  '<div class="view-head"><div><h2>Movimientos de caja</h2><div class="desc">Ingresos y egresos registrados</div></div>' +
+    '<div style="display:flex;gap:8px"><button class="btn" data-add-mov="egreso">+ Egreso</button><button class="btn btn-primary" data-add-mov="ingreso">+ Ingreso</button></div></div>' +
+  '<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Concepto</th><th>Monto</th></tr></thead>' +
+  '<tbody>'+(rows||'<tr><td colspan="5" class="empty-row">Sin movimientos.</td></tr>')+'</tbody></table></div>';
+};
+function movFormHtml(tipo){
+  var cats = tipo==="ingreso" ? ["Cobranza cuotas","Cobranza multas","Otros ingresos"] :
+    ["Limpieza áreas comunes","Seguridad","Jardinería","Electricidad común","Mantenimiento ascensor","Honorarios administración","Insumos","Otros egresos"];
+  return '<div class="field"><label>Categoría</label><select name="categoria">' + cats.map(function(c){return '<option>'+esc(c)+'</option>';}).join("") + '</select></div>' +
+    '<div class="field"><label>Concepto / descripción</label><input name="concepto" required></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Monto (Bs)</label><input type="number" step="0.01" name="monto" required></div>' +
+      '<div class="field"><label>Fecha</label><input type="date" name="fecha" value="'+todayISO()+'" required></div>' +
+    '</div>';
+}
+BINDERS.caja = function(){
+  var c = document.getElementById("content");
+  c.querySelectorAll("[data-add-mov]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var tipo = btn.getAttribute("data-add-mov");
+      openModal((tipo==="ingreso"?"Nuevo ingreso":"Nuevo egreso"), movFormHtml(tipo), {
+        onSubmit:function(data){
+          DB.caja.push({id:uid("cj"), tipo:tipo, categoria:data.categoria, concepto:data.concepto, monto:+data.monto, fecha:data.fecha});
+          persist(); logAudit("Registró "+tipo+" de caja: "+data.concepto); toast("Movimiento registrado"); renderView("caja");
+        }
+      });
+    });
+  });
+};
+
+/* ============================= AREAS COMUNES ============================= */
+VIEWS.areas = function(){
+  var isResidente = SESSION.rol==="residente";
+  var misDepto = isResidente ? DB.departamentos.find(function(d){return d.propietarioId===SESSION.propietarioId;}) : null;
+  var cards = DB.areas.map(function(a){
+    var prox = DB.reservas.filter(function(r){return r.areaId===a.id && r.fecha>=todayISO();}).sort(function(x,y){return x.fecha<y.fecha?-1:1;});
+    return '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
+        '<div><h3 style="font-size:15px">'+esc(a.nombre)+'</h3><div class="muted" style="font-size:12px">Capacidad '+a.capacidad+' personas · '+esc(a.horario)+'</div></div>' +
+        (isResidente ? '<button class="btn btn-sm btn-primary" data-reservar="'+a.id+'">Reservar</button>' : '<button class="btn btn-sm" data-manage-reservas="'+a.id+'">Reservas</button>') +
+      '</div>' +
+      (prox.length ? '<div class="avail-list">'+prox.slice(0,3).map(function(r){
+        return '<div class="avail-item"><span>'+fmtDate(r.fecha)+' · '+r.horaInicio+'–'+r.horaFin+'</span>' +
+        (isResidente ? '<span class="muted" style="font-size:12px">'+(r.departamentoId===(misDepto&&misDepto.id)?"Tu reserva":"Reservado")+'</span>' : '<span class="muted" style="font-size:12px">'+esc(deptoLabel(r.departamentoId))+'</span>') +
+        '</div>';
+      }).join("")+'</div>' : '<p class="muted" style="font-size:12.5px">Sin reservas próximas.</p>') +
+    '</div>';
+  }).join("");
+  return '' +
+  '<div class="notice-banner">ⓘ Control de accesos y gestión de proveedores <span class="tag-soon" style="margin-left:6px">próxima ampliación</span></div>' +
+  '<div class="view-head"><div><h2>Áreas comunes</h2><div class="desc">Disponibilidad y reservas</div></div></div>' +
+  '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">'+cards+'</div>';
+};
+function reservaFormHtml(areaId, deptoOptions){
+  return '<div class="field"><label>Departamento</label><select name="departamentoId" required>' +
+      deptoOptions.map(function(d){return '<option value="'+d.id+'">'+esc(deptoLabel(d.id))+'</option>';}).join("") + '</select></div>' +
+    '<div class="field"><label>Fecha</label><input type="date" name="fecha" min="'+todayISO()+'" value="'+todayISO()+'" required></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Hora inicio</label><input type="time" name="horaInicio" value="10:00" required></div>' +
+      '<div class="field"><label>Hora fin</label><input type="time" name="horaFin" value="12:00" required></div>' +
+    '</div>';
+}
+BINDERS.areas = function(){
+  var c = document.getElementById("content");
+  c.querySelectorAll("[data-reservar]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var areaId = btn.getAttribute("data-reservar");
+      var misDepto = DB.departamentos.filter(function(d){return d.propietarioId===SESSION.propietarioId;});
+      openModal("Reservar "+areaNombre(areaId), reservaFormHtml(areaId, misDepto), {
+        submitLabel:"Confirmar reserva",
+        onSubmit:function(data){
+          DB.reservas.push({id:uid("r"), areaId:areaId, departamentoId:data.departamentoId, fecha:data.fecha, horaInicio:data.horaInicio, horaFin:data.horaFin, estado:"confirmada"});
+          persist(); logAudit("Reservó "+areaNombre(areaId)+" para "+data.fecha); toast("Reserva confirmada"); renderView("areas");
+        }
+      });
+    });
+  });
+  c.querySelectorAll("[data-manage-reservas]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var areaId = btn.getAttribute("data-manage-reservas");
+      var list = DB.reservas.filter(function(r){return r.areaId===areaId;}).sort(function(a,b){return b.fecha<a.fecha?-1:1;});
+      var body = list.length ? '<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Horario</th><th>Depto.</th><th>Estado</th></tr></thead><tbody>' +
+        list.map(function(r){ return '<tr><td>'+fmtDate(r.fecha)+'</td><td>'+r.horaInicio+'–'+r.horaFin+'</td><td>'+esc(deptoLabel(r.departamentoId))+'</td><td><span class="badge '+(r.estado==="confirmada"?"badge-info":"badge-neutral")+'">'+esc(r.estado)+'</span></td></tr>'; }).join("") +
+        '</tbody></table></div>' : '<p class="muted" style="font-size:13px">Sin reservas registradas.</p>';
+      openModal("Reservas — "+areaNombre(areaId), body, {submitLabel:"Cerrar", onSubmit:function(){return true;}});
+    });
+  });
+};
+
+/* ============================= COMUNICACIONES ============================= */
+VIEWS.comunicaciones = function(){
+  var canPublish = SESSION.rol!=="residente";
+  var list = DB.comunicaciones.slice().sort(function(a,b){return b.fecha<a.fecha?-1:1;});
+  return '' +
+  '<div class="view-head"><div><h2>Comunicaciones</h2><div class="desc">Avisos y notificaciones del condominio</div></div>' +
+    (canPublish ? '<button class="btn btn-primary" data-add-comm>+ Nuevo comunicado</button>' : '') +
+  '</div>' +
+  renderComunicadosList(list);
+};
+function commFormHtml(){
+  return '<div class="field"><label>Título</label><input name="titulo" required></div>' +
+    '<div class="field"><label>Contenido</label><textarea name="contenido" rows="4" required></textarea></div>' +
+    '<div class="field"><label>Prioridad</label><select name="prioridad"><option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option></select></div>';
+}
+BINDERS.comunicaciones = function(){
+  var c = document.getElementById("content");
+  var addBtn = c.querySelector("[data-add-comm]");
+  if(addBtn){
+    addBtn.addEventListener("click", function(){
+      openModal("Nuevo comunicado", commFormHtml(), {
+        submitLabel:"Publicar",
+        onSubmit:function(data){
+          DB.comunicaciones.unshift({id:uid("co"), titulo:data.titulo, contenido:data.contenido, prioridad:data.prioridad, fecha:todayISO(), autor:SESSION.nombre});
+          persist(); logAudit("Publicó comunicado: "+data.titulo); toast("Comunicado publicado"); renderView("comunicaciones");
+        }
+      });
+    });
+  }
+};
+
+/* ============================= REPORTES ============================= */
+VIEWS.reportes = function(){
+  var ocupados = DB.departamentos.filter(function(d){return d.estado==="ocupado";});
+  var cobradoMes = 0, esperadoMes=0;
+  var thisMonth = todayISO().slice(0,7);
+  DB.cuotas.filter(function(c){return c.periodo===thisMonth && c.concepto==="ordinaria";}).forEach(function(c){
+    esperadoMes += c.monto; cobradoMes += Math.min(c.montoPagado,c.monto);
+  });
+  var pctCobranza = esperadoMes ? Math.round(cobradoMes/esperadoMes*100) : 0;
+  var egresosPorCat = {};
+  DB.caja.filter(function(c){return c.tipo==="egreso";}).forEach(function(c){ egresosPorCat[c.categoria]=(egresosPorCat[c.categoria]||0)+c.monto; });
+  var catRows = Object.keys(egresosPorCat).sort(function(a,b){return egresosPorCat[b]-egresosPorCat[a];});
+  var maxCat = Math.max.apply(null, catRows.map(function(k){return egresosPorCat[k];})) || 1;
+
+  return '' +
+  '<div class="notice-banner">ⓘ Exportación a PDF/Excel y reportes avanzados <span class="tag-soon" style="margin-left:6px">próxima ampliación</span></div>' +
+  '<div class="grid two-col">' +
+    '<div class="card"><div class="section-title">Ingresos vs. egresos (6 meses)</div>'+cajaBarChart()+'</div>' +
+    '<div class="card"><div class="section-title">Morosidad por unidades</div>'+morosidadDonut(ocupados)+'</div>' +
+  '</div>' +
+  '<div class="grid two-col" style="margin-top:14px">' +
+    '<div class="card">' +
+      '<div class="section-title">Cobranza del mes ('+thisMonth+')</div>' +
+      '<div class="progress"><div style="width:'+pctCobranza+'%"></div></div>' +
+      '<p style="margin-top:8px;font-size:13px" class="muted">'+fmtBs(cobradoMes)+' cobrados de '+fmtBs(esperadoMes)+' esperados (<b class="num">'+pctCobranza+'%</b>)</p>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="section-title">Egresos por categoría</div>' +
+      catRows.slice(0,6).map(function(k){
+        var pct = Math.round(egresosPorCat[k]/maxCat*100);
+        return '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>'+esc(k)+'</span><b class="num">'+fmtBs(egresosPorCat[k])+'</b></div>' +
+          '<div class="progress"><div style="width:'+pct+'%;background:var(--accent)"></div></div></div>';
+      }).join("") +
+    '</div>' +
+  '</div>';
+};
+
+/* ============================= USUARIOS ============================= */
+VIEWS.usuarios = function(){
+  var rows = DB.usuarios.map(function(u){
+    return '<tr><td><b>'+esc(u.nombre)+'</b></td><td>'+esc(u.email)+'</td>' +
+      '<td>'+rolBadge(u.rol)+'</td>' +
+      '<td>'+(u.activo?'<span class="badge badge-success">Activo</span>':'<span class="badge badge-neutral">Inactivo</span>')+'</td>' +
+      '<td class="cell-actions"><button class="btn btn-sm" data-toggle-user="'+u.id+'">'+(u.activo?"Desactivar":"Activar")+'</button></td></tr>';
+  }).join("");
+  var audit = DB.auditoria.slice(0,10).map(function(a){
+    return '<tr><td>'+esc(a.usuario)+'</td><td>'+esc(a.accion)+'</td><td class="muted">'+esc(a.fecha.replace("T"," "))+'</td></tr>';
+  }).join("");
+  return '' +
+  '<div class="view-head"><div><h2>Usuarios y roles</h2><div class="desc">Accesos y permisos del sistema</div></div>' +
+    '<button class="btn btn-primary" data-add-user>+ Usuario</button></div>' +
+  '<div class="table-wrap" style="margin-bottom:20px"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th></th></tr></thead>' +
+  '<tbody>'+(rows||'<tr><td colspan="5" class="empty-row">Sin usuarios.</td></tr>')+'</tbody></table></div>' +
+  '<div class="section-title">Auditoría reciente</div>' +
+  '<div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Acción</th><th>Fecha</th></tr></thead>' +
+  '<tbody>'+(audit||'<tr><td colspan="3" class="empty-row">Sin actividad registrada.</td></tr>')+'</tbody></table></div>';
+};
+function rolBadge(r){
+  var m = {administrador:["Administrador","badge-info"], contabilidad:["Contabilidad","badge-warning"], residente:["Residente","badge-neutral"]};
+  var v = m[r]||[r,"badge-neutral"];
+  return '<span class="badge '+v[1]+'">'+v[0]+'</span>';
+}
+function userFormHtml(){
+  return '<div class="field"><label>Nombre completo</label><input name="nombre" required></div>' +
+    '<div class="field"><label>Correo</label><input type="email" name="email" required></div>' +
+    '<div class="field"><label>Rol</label><select name="rol">' +
+      '<option value="administrador">Administrador</option><option value="contabilidad">Administración/Contabilidad</option><option value="residente">Propietario/Residente</option>' +
+    '</select></div>';
+}
+BINDERS.usuarios = function(){
+  var c = document.getElementById("content");
+  c.querySelector("[data-add-user]").addEventListener("click", function(){
+    openModal("Nuevo usuario", userFormHtml(), {
+      onSubmit:function(data){
+        DB.usuarios.push({id:uid("u"), nombre:data.nombre, email:data.email, rol:data.rol, activo:true});
+        persist(); logAudit("Creó usuario: "+data.nombre); toast("Usuario creado"); renderView("usuarios");
+      }
+    });
+  });
+  c.querySelectorAll("[data-toggle-user]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var u = DB.usuarios.find(function(x){return x.id===btn.getAttribute("data-toggle-user");});
+      u.activo = !u.activo;
+      persist(); logAudit((u.activo?"Activó":"Desactivó")+" usuario: "+u.nombre); toast("Usuario "+(u.activo?"activado":"desactivado")); renderView("usuarios");
+    });
+  });
+};
+
+/* expose reset for console/demo use */
+window.__condoResetDemo = resetDB;
+
+})();
+</script>
